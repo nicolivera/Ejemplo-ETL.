@@ -1,0 +1,3234 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="9/28/2019 3:04:05 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="NIKKO-PC"
+  DTS:CreatorName="nikko-PC\nikko"
+  DTS:DTSID="{696593D1-007E-4DE9-9E6A-4B4ADFC75DBC}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="15.0.1301.433"
+  DTS:LocaleID="3082"
+  DTS:ObjectName="Package"
+  DTS:PackageType="5"
+  DTS:VersionBuild="9"
+  DTS:VersionGUID="{AF750D24-0F37-4B6F-8067-6667E5E0FBE9}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[LocalHost.ETL_Stage]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{498A4C94-0FB2-4002-870F-F593BBF6BBD6}"
+      DTS:ObjectName="LocalHost.ETL_Stage">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=.;Initial Catalog=ETL_Stage;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Cargar Datos"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Tarea Ejecutar SQL"
+      DTS:DTSID="{E1369DCE-BF52-477E-9772-DFBF46F6EBD4}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Cargar Datos"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{498A4C94-0FB2-4002-870F-F593BBF6BBD6}"
+          SQLTask:SqlStatementSource="execute USP_Carga_Venta;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Grabar DimCliente"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Tarea Flujo de datos"
+      DTS:DTSID="{E7367D3A-53F0-479D-86ED-D0D2D1495D2C}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Grabar DimCliente"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Grabar DimCliente\Copiar columna"
+              componentClassID="Microsoft.CopyMap"
+              contactInfo="Copiar columna;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;0"
+              description="Copia columnas de entrada en nuevas columnas de la salida de transformación. Por ejemplo, se crea una copia de la columna 'dirección' de modo que se pueda limpiar en transformaciones subsiguientes y se mantiene la columna original para las auditorías."
+              name="Copiar columna">
+              <inputs>
+                <input
+                  refId="Package\Grabar DimCliente\Copiar columna.Inputs[Entrada de Copiar columna]"
+                  name="Entrada de Copiar columna">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Grabar DimCliente\Copiar columna.Outputs[Salida de Copiar columna]"
+                  name="Salida de Copiar columna"
+                  synchronousInputId="Package\Grabar DimCliente\Copiar columna.Inputs[Entrada de Copiar columna]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Grabar DimCliente\Destino de OLE DB"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="Destino de OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;4"
+              description="Destino de OLE DB"
+              name="Destino de OLE DB"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Número de segundos antes de que se agote el tiempo de espera de un comando. Un valor de 0 indica un tiempo de espera infinito."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowset">[dbo].[DimCliente]</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica la variable que contiene el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="Comando SQL para ejecutar."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica la página de códigos de columna para utilizar cuando la información de página de códigos no está disponible en el origen de datos."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Fuerza el uso del valor de la propiedad DefaultCodePage al describir datos de caracteres."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica el modo utilizado para obtener acceso a la base de datos."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indica si los valores proporcionados para columnas de identidad se van a copiar al destino. Si es False, los valores de las columnas de identidad se generan automáticamente en el destino. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indica si las columnas que contienen NULL tendrán NULL insertado en el destino. Si es False, las columnas que contienen NULL tendrán sus valores predeterminados insertados en el destino. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica opciones para usar con la carga rápida. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadOptions"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica cuándo se emiten confirmaciones durante la inserción de datos. El valor 0 especifica que se emitirá una confirmación al final de la inserción de datos. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Grabar DimCliente\Destino de OLE DB.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[LocalHost.ETL_Stage]"
+                  connectionManagerRefId="Package.ConnectionManagers[LocalHost.ETL_Stage]"
+                  description="La conexión de tiempo de ejecución OLE DB usada para obtener acceso a la base de datos."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Grabar DimCliente\Destino de OLE DB.Inputs[Entrada de destino de OLE DB]"
+                  errorOrTruncationOperation="Insertar"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="Entrada de destino de OLE DB">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Grabar DimCliente\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[IdCliente]"
+                      cachedDataType="wstr"
+                      cachedLength="6"
+                      cachedName="IdCliente"
+                      externalMetadataColumnId="Package\Grabar DimCliente\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[IdCliente]"
+                      lineageId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdCliente]" />
+                    <inputColumn
+                      refId="Package\Grabar DimCliente\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[NombreCliente]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="NombreCliente"
+                      externalMetadataColumnId="Package\Grabar DimCliente\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[NombreCliente]"
+                      lineageId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreCliente]" />
+                    <inputColumn
+                      refId="Package\Grabar DimCliente\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[IdDistrito]"
+                      cachedDataType="wstr"
+                      cachedLength="7"
+                      cachedName="IdDistrito"
+                      externalMetadataColumnId="Package\Grabar DimCliente\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[IdDistrito]"
+                      lineageId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdDistrito]" />
+                    <inputColumn
+                      refId="Package\Grabar DimCliente\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[NombreDistrito]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="NombreDistrito"
+                      externalMetadataColumnId="Package\Grabar DimCliente\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[NombreDistrito]"
+                      lineageId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreDistrito]" />
+                    <inputColumn
+                      refId="Package\Grabar DimCliente\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[DniCliente]"
+                      cachedDataType="wstr"
+                      cachedLength="8"
+                      cachedName="DniCliente"
+                      externalMetadataColumnId="Package\Grabar DimCliente\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[DniCliente]"
+                      lineageId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[DniCliente]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimCliente\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[ECliente]"
+                      dataType="i4"
+                      name="ECliente" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimCliente\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[IdCliente]"
+                      dataType="wstr"
+                      length="6"
+                      name="IdCliente" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimCliente\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[NombreCliente]"
+                      dataType="wstr"
+                      length="150"
+                      name="NombreCliente" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimCliente\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[IdDistrito]"
+                      dataType="wstr"
+                      length="10"
+                      name="IdDistrito" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimCliente\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[NombreDistrito]"
+                      dataType="wstr"
+                      length="50"
+                      name="NombreDistrito" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimCliente\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[DniCliente]"
+                      dataType="wstr"
+                      length="8"
+                      name="DniCliente" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Grabar DimCliente\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Salida de error de destino de OLE DB"
+                  synchronousInputId="Package\Grabar DimCliente\Destino de OLE DB.Inputs[Entrada de destino de OLE DB]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Grabar DimCliente\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Grabar DimCliente\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Grabar DimCliente\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Grabar DimCliente\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Grabar DimCliente\Origen de OLE DB"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="Origen de OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;7"
+              description="Origen de OLE DB"
+              name="Origen de OLE DB"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Número de segundos antes de que se agote el tiempo de espera de un comando. Un valor de 0 indica un tiempo de espera infinito."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Especifica la variable que contiene el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="Comando SQL para ejecutar."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">SELECT        Cliente.IdCliente, Cliente.ApellidoCliente+' '+ Cliente.NombreCliente as NombreCliente, Cliente.DniCliente, Distrito.IdDistrito, Distrito.NombreDistrito
+FROM            Cliente INNER JOIN
+                         Distrito ON Cliente.IdDistrito = Distrito.IdDistrito</property>
+                <property
+                  dataType="System.String"
+                  description="Variable que contiene el comando SQL para ejecutar."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica la página de códigos de columna para utilizar cuando la información de página de códigos no está disponible en el origen de datos."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Fuerza el uso del valor de la propiedad DefaultCodePage al describir datos de caracteres."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica el modo utilizado para obtener acceso a la base de datos."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="Asignaciones entre los parámetros del comando SQL y las variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Grabar DimCliente\Origen de OLE DB.Connections[OleDbConnection]"
+                  connectionManagerID="{D27F6602-7D8B-4404-A5E8-7397BA557C1F}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[LocalHost.ETL]"
+                  description="La conexión de tiempo de ejecución OLE DB usada para obtener acceso a la base de datos."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB]"
+                  name="Salida de origen de OLE DB">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdCliente]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[IdCliente]"
+                      length="6"
+                      lineageId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdCliente]"
+                      name="IdCliente"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreCliente]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[NombreCliente]"
+                      length="50"
+                      lineageId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreCliente]"
+                      name="NombreCliente"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdDistrito]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[IdDistrito]"
+                      length="7"
+                      lineageId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdDistrito]"
+                      name="IdDistrito"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreDistrito]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[NombreDistrito]"
+                      length="50"
+                      lineageId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreDistrito]"
+                      name="NombreDistrito"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[DniCliente]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[DniCliente]"
+                      length="8"
+                      lineageId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[DniCliente]"
+                      name="DniCliente"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[IdCliente]"
+                      dataType="wstr"
+                      length="6"
+                      name="IdCliente" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[NombreCliente]"
+                      dataType="wstr"
+                      length="101"
+                      name="NombreCliente" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[IdDistrito]"
+                      dataType="wstr"
+                      length="7"
+                      name="IdDistrito" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[NombreDistrito]"
+                      dataType="wstr"
+                      length="50"
+                      name="NombreDistrito" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[DniCliente]"
+                      dataType="wstr"
+                      length="8"
+                      name="DniCliente" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB]"
+                  isErrorOut="true"
+                  name="Salida de error de origen de OLE DB">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[IdCliente]"
+                      dataType="wstr"
+                      length="6"
+                      lineageId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[IdCliente]"
+                      name="IdCliente" />
+                    <outputColumn
+                      refId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[NombreCliente]"
+                      dataType="wstr"
+                      length="101"
+                      lineageId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[NombreCliente]"
+                      name="NombreCliente" />
+                    <outputColumn
+                      refId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[DniCliente]"
+                      dataType="wstr"
+                      length="8"
+                      lineageId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[DniCliente]"
+                      name="DniCliente" />
+                    <outputColumn
+                      refId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[IdDistrito]"
+                      dataType="wstr"
+                      length="7"
+                      lineageId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[IdDistrito]"
+                      name="IdDistrito" />
+                    <outputColumn
+                      refId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[NombreDistrito]"
+                      dataType="wstr"
+                      length="50"
+                      lineageId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[NombreDistrito]"
+                      name="NombreDistrito" />
+                    <outputColumn
+                      refId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Grabar DimCliente.Paths[Salida de Copiar columna]"
+              endId="Package\Grabar DimCliente\Destino de OLE DB.Inputs[Entrada de destino de OLE DB]"
+              name="Salida de Copiar columna"
+              startId="Package\Grabar DimCliente\Copiar columna.Outputs[Salida de Copiar columna]" />
+            <path
+              refId="Package\Grabar DimCliente.Paths[Salida de origen de OLE DB]"
+              endId="Package\Grabar DimCliente\Copiar columna.Inputs[Entrada de Copiar columna]"
+              name="Salida de origen de OLE DB"
+              startId="Package\Grabar DimCliente\Origen de OLE DB.Outputs[Salida de origen de OLE DB]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Grabar DimEmpleado"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Tarea Flujo de datos"
+      DTS:DTSID="{E5E988AA-F072-4610-8187-6A0F1EF0EE63}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Grabar DimEmpleado"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Grabar DimEmpleado\Copiar columna"
+              componentClassID="Microsoft.CopyMap"
+              contactInfo="Copiar columna;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;0"
+              description="Copia columnas de entrada en nuevas columnas de la salida de transformación. Por ejemplo, se crea una copia de la columna 'dirección' de modo que se pueda limpiar en transformaciones subsiguientes y se mantiene la columna original para las auditorías."
+              name="Copiar columna">
+              <inputs>
+                <input
+                  refId="Package\Grabar DimEmpleado\Copiar columna.Inputs[Entrada de Copiar columna]"
+                  name="Entrada de Copiar columna">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Grabar DimEmpleado\Copiar columna.Outputs[Salida de Copiar columna]"
+                  name="Salida de Copiar columna"
+                  synchronousInputId="Package\Grabar DimEmpleado\Copiar columna.Inputs[Entrada de Copiar columna]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Grabar DimEmpleado\Destino de OLE DB"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="Destino de OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;4"
+              description="Destino de OLE DB"
+              name="Destino de OLE DB"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Número de segundos antes de que se agote el tiempo de espera de un comando. Un valor de 0 indica un tiempo de espera infinito."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowset">[dbo].[DimEmpleado]</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica la variable que contiene el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="Comando SQL para ejecutar."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica la página de códigos de columna para utilizar cuando la información de página de códigos no está disponible en el origen de datos."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Fuerza el uso del valor de la propiedad DefaultCodePage al describir datos de caracteres."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica el modo utilizado para obtener acceso a la base de datos."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indica si los valores proporcionados para columnas de identidad se van a copiar al destino. Si es False, los valores de las columnas de identidad se generan automáticamente en el destino. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indica si las columnas que contienen NULL tendrán NULL insertado en el destino. Si es False, las columnas que contienen NULL tendrán sus valores predeterminados insertados en el destino. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica opciones para usar con la carga rápida. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica cuándo se emiten confirmaciones durante la inserción de datos. El valor 0 especifica que se emitirá una confirmación al final de la inserción de datos. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Grabar DimEmpleado\Destino de OLE DB.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[LocalHost.ETL_Stage]"
+                  connectionManagerRefId="Package.ConnectionManagers[LocalHost.ETL_Stage]"
+                  description="La conexión de tiempo de ejecución OLE DB usada para obtener acceso a la base de datos."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Grabar DimEmpleado\Destino de OLE DB.Inputs[Entrada de destino de OLE DB]"
+                  errorOrTruncationOperation="Insertar"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="Entrada de destino de OLE DB">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Grabar DimEmpleado\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[IdEmpleado]"
+                      cachedDataType="wstr"
+                      cachedLength="6"
+                      cachedName="IdEmpleado"
+                      externalMetadataColumnId="Package\Grabar DimEmpleado\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[IdEmpleado]"
+                      lineageId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdEmpleado]" />
+                    <inputColumn
+                      refId="Package\Grabar DimEmpleado\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[NombreEmpleado]"
+                      cachedDataType="wstr"
+                      cachedLength="101"
+                      cachedName="NombreEmpleado"
+                      externalMetadataColumnId="Package\Grabar DimEmpleado\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[NombreEmpleado]"
+                      lineageId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreEmpleado]" />
+                    <inputColumn
+                      refId="Package\Grabar DimEmpleado\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[IdDistrito]"
+                      cachedDataType="wstr"
+                      cachedLength="7"
+                      cachedName="IdDistrito"
+                      externalMetadataColumnId="Package\Grabar DimEmpleado\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[IdDistrito]"
+                      lineageId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdDistrito]" />
+                    <inputColumn
+                      refId="Package\Grabar DimEmpleado\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[NombreDistrito]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="NombreDistrito"
+                      externalMetadataColumnId="Package\Grabar DimEmpleado\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[NombreDistrito]"
+                      lineageId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreDistrito]" />
+                    <inputColumn
+                      refId="Package\Grabar DimEmpleado\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[DniEmpleado]"
+                      cachedDataType="wstr"
+                      cachedLength="8"
+                      cachedName="DniEmpleado"
+                      externalMetadataColumnId="Package\Grabar DimEmpleado\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[DniEmpleado]"
+                      lineageId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[DniEmpleado]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimEmpleado\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[EEmpleado]"
+                      dataType="i4"
+                      name="EEmpleado" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimEmpleado\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[IdEmpleado]"
+                      dataType="wstr"
+                      length="6"
+                      name="IdEmpleado" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimEmpleado\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[NombreEmpleado]"
+                      dataType="wstr"
+                      length="150"
+                      name="NombreEmpleado" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimEmpleado\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[IdDistrito]"
+                      dataType="wstr"
+                      length="10"
+                      name="IdDistrito" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimEmpleado\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[NombreDistrito]"
+                      dataType="wstr"
+                      length="50"
+                      name="NombreDistrito" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimEmpleado\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[DniEmpleado]"
+                      dataType="wstr"
+                      length="8"
+                      name="DniEmpleado" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Grabar DimEmpleado\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Salida de error de destino de OLE DB"
+                  synchronousInputId="Package\Grabar DimEmpleado\Destino de OLE DB.Inputs[Entrada de destino de OLE DB]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Grabar DimEmpleado\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Grabar DimEmpleado\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Grabar DimEmpleado\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Grabar DimEmpleado\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Grabar DimEmpleado\Origen de OLE DB"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="Origen de OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;7"
+              description="Origen de OLE DB"
+              name="Origen de OLE DB"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Número de segundos antes de que se agote el tiempo de espera de un comando. Un valor de 0 indica un tiempo de espera infinito."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Especifica la variable que contiene el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="Comando SQL para ejecutar."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">SELECT        Empleado.IdEmpleado, Empleado.ApellidoEmpleado+' '+Empleado.NombreEmpleado as NombreEmpleado, Distrito.IdDistrito, Distrito.NombreDistrito, Empleado.DniEmpleado
+FROM            Distrito INNER JOIN
+                         Empleado ON Distrito.IdDistrito = Empleado.IdDistrito</property>
+                <property
+                  dataType="System.String"
+                  description="Variable que contiene el comando SQL para ejecutar."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica la página de códigos de columna para utilizar cuando la información de página de códigos no está disponible en el origen de datos."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Fuerza el uso del valor de la propiedad DefaultCodePage al describir datos de caracteres."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica el modo utilizado para obtener acceso a la base de datos."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="Asignaciones entre los parámetros del comando SQL y las variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Grabar DimEmpleado\Origen de OLE DB.Connections[OleDbConnection]"
+                  connectionManagerID="{D27F6602-7D8B-4404-A5E8-7397BA557C1F}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[LocalHost.ETL]"
+                  description="La conexión de tiempo de ejecución OLE DB usada para obtener acceso a la base de datos."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB]"
+                  name="Salida de origen de OLE DB">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdEmpleado]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[IdEmpleado]"
+                      length="6"
+                      lineageId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdEmpleado]"
+                      name="IdEmpleado"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreEmpleado]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[NombreEmpleado]"
+                      length="101"
+                      lineageId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreEmpleado]"
+                      name="NombreEmpleado"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdDistrito]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[IdDistrito]"
+                      length="7"
+                      lineageId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdDistrito]"
+                      name="IdDistrito"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreDistrito]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[NombreDistrito]"
+                      length="50"
+                      lineageId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreDistrito]"
+                      name="NombreDistrito"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[DniEmpleado]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[DniEmpleado]"
+                      length="8"
+                      lineageId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[DniEmpleado]"
+                      name="DniEmpleado"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[IdEmpleado]"
+                      dataType="wstr"
+                      length="6"
+                      name="IdEmpleado" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[NombreEmpleado]"
+                      dataType="wstr"
+                      length="101"
+                      name="NombreEmpleado" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[IdDistrito]"
+                      dataType="wstr"
+                      length="7"
+                      name="IdDistrito" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[NombreDistrito]"
+                      dataType="wstr"
+                      length="50"
+                      name="NombreDistrito" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[DniEmpleado]"
+                      dataType="wstr"
+                      length="8"
+                      name="DniEmpleado" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB]"
+                  isErrorOut="true"
+                  name="Salida de error de origen de OLE DB">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[IdEmpleado]"
+                      dataType="wstr"
+                      length="6"
+                      lineageId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[IdEmpleado]"
+                      name="IdEmpleado" />
+                    <outputColumn
+                      refId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[NombreEmpleado]"
+                      dataType="wstr"
+                      length="101"
+                      lineageId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[NombreEmpleado]"
+                      name="NombreEmpleado" />
+                    <outputColumn
+                      refId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[IdDistrito]"
+                      dataType="wstr"
+                      length="7"
+                      lineageId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[IdDistrito]"
+                      name="IdDistrito" />
+                    <outputColumn
+                      refId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[NombreDistrito]"
+                      dataType="wstr"
+                      length="50"
+                      lineageId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[NombreDistrito]"
+                      name="NombreDistrito" />
+                    <outputColumn
+                      refId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[DniEmpleado]"
+                      dataType="wstr"
+                      length="8"
+                      lineageId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[DniEmpleado]"
+                      name="DniEmpleado" />
+                    <outputColumn
+                      refId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Grabar DimEmpleado.Paths[Salida de Copiar columna]"
+              endId="Package\Grabar DimEmpleado\Destino de OLE DB.Inputs[Entrada de destino de OLE DB]"
+              name="Salida de Copiar columna"
+              startId="Package\Grabar DimEmpleado\Copiar columna.Outputs[Salida de Copiar columna]" />
+            <path
+              refId="Package\Grabar DimEmpleado.Paths[Salida de origen de OLE DB]"
+              endId="Package\Grabar DimEmpleado\Copiar columna.Inputs[Entrada de Copiar columna]"
+              name="Salida de origen de OLE DB"
+              startId="Package\Grabar DimEmpleado\Origen de OLE DB.Outputs[Salida de origen de OLE DB]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Grabar DimProducto"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Tarea Flujo de datos"
+      DTS:DTSID="{A31211FE-714B-4C2E-856E-D229FC87AC00}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Grabar DimProducto"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Grabar DimProducto\Copiar columna"
+              componentClassID="Microsoft.CopyMap"
+              contactInfo="Copiar columna;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;0"
+              description="Copia columnas de entrada en nuevas columnas de la salida de transformación. Por ejemplo, se crea una copia de la columna 'dirección' de modo que se pueda limpiar en transformaciones subsiguientes y se mantiene la columna original para las auditorías."
+              name="Copiar columna">
+              <inputs>
+                <input
+                  refId="Package\Grabar DimProducto\Copiar columna.Inputs[Entrada de Copiar columna]"
+                  name="Entrada de Copiar columna">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Grabar DimProducto\Copiar columna.Outputs[Salida de Copiar columna]"
+                  name="Salida de Copiar columna"
+                  synchronousInputId="Package\Grabar DimProducto\Copiar columna.Inputs[Entrada de Copiar columna]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Grabar DimProducto\Destino de OLE DB"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="Destino de OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;4"
+              description="Destino de OLE DB"
+              name="Destino de OLE DB"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Número de segundos antes de que se agote el tiempo de espera de un comando. Un valor de 0 indica un tiempo de espera infinito."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowset">[dbo].[DimProducto]</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica la variable que contiene el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="Comando SQL para ejecutar."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica la página de códigos de columna para utilizar cuando la información de página de códigos no está disponible en el origen de datos."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Fuerza el uso del valor de la propiedad DefaultCodePage al describir datos de caracteres."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica el modo utilizado para obtener acceso a la base de datos."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indica si los valores proporcionados para columnas de identidad se van a copiar al destino. Si es False, los valores de las columnas de identidad se generan automáticamente en el destino. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indica si las columnas que contienen NULL tendrán NULL insertado en el destino. Si es False, las columnas que contienen NULL tendrán sus valores predeterminados insertados en el destino. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica opciones para usar con la carga rápida. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica cuándo se emiten confirmaciones durante la inserción de datos. El valor 0 especifica que se emitirá una confirmación al final de la inserción de datos. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Grabar DimProducto\Destino de OLE DB.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[LocalHost.ETL_Stage]"
+                  connectionManagerRefId="Package.ConnectionManagers[LocalHost.ETL_Stage]"
+                  description="La conexión de tiempo de ejecución OLE DB usada para obtener acceso a la base de datos."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB]"
+                  errorOrTruncationOperation="Insertar"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="Entrada de destino de OLE DB">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[IdProducto]"
+                      cachedDataType="wstr"
+                      cachedLength="6"
+                      cachedName="IdProducto"
+                      externalMetadataColumnId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[IdProducto]"
+                      lineageId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdProducto]" />
+                    <inputColumn
+                      refId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[DescriProducto]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="DescriProducto"
+                      externalMetadataColumnId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[DescriProducto]"
+                      lineageId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[DescriProducto]" />
+                    <inputColumn
+                      refId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[PrecioUnidad]"
+                      cachedDataType="cy"
+                      cachedName="PrecioUnidad"
+                      externalMetadataColumnId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[PrecioUnidad]"
+                      lineageId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[PrecioUnidad]" />
+                    <inputColumn
+                      refId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[IdCategoria]"
+                      cachedDataType="wstr"
+                      cachedLength="6"
+                      cachedName="IdCategoria"
+                      externalMetadataColumnId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[IdCategoria]"
+                      lineageId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdCategoria]" />
+                    <inputColumn
+                      refId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[IdMarca]"
+                      cachedDataType="wstr"
+                      cachedLength="6"
+                      cachedName="IdMarca"
+                      externalMetadataColumnId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[IdMarca]"
+                      lineageId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdMarca]" />
+                    <inputColumn
+                      refId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[NombreMarca]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="NombreMarca"
+                      externalMetadataColumnId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[NombreMarca]"
+                      lineageId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreMarca]" />
+                    <inputColumn
+                      refId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[NombreCategoria]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="NombreCategoria"
+                      externalMetadataColumnId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[NombreCategoria]"
+                      lineageId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreCategoria]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[EProducto]"
+                      dataType="i4"
+                      name="EProducto" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[IdProducto]"
+                      dataType="wstr"
+                      length="6"
+                      name="IdProducto" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[DescriProducto]"
+                      codePage="1252"
+                      dataType="str"
+                      length="100"
+                      name="DescriProducto" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[IdMarca]"
+                      dataType="wstr"
+                      length="6"
+                      name="IdMarca" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[NombreMarca]"
+                      dataType="wstr"
+                      length="50"
+                      name="NombreMarca" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[IdCategoria]"
+                      dataType="wstr"
+                      length="6"
+                      name="IdCategoria" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[NombreCategoria]"
+                      dataType="wstr"
+                      length="50"
+                      name="NombreCategoria" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[PrecioUnidad]"
+                      dataType="cy"
+                      name="PrecioUnidad" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Grabar DimProducto\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Salida de error de destino de OLE DB"
+                  synchronousInputId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Grabar DimProducto\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Grabar DimProducto\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Grabar DimProducto\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Grabar DimProducto\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Grabar DimProducto\Origen de OLE DB"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="Origen de OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;7"
+              description="Origen de OLE DB"
+              name="Origen de OLE DB"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Número de segundos antes de que se agote el tiempo de espera de un comando. Un valor de 0 indica un tiempo de espera infinito."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Especifica la variable que contiene el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="Comando SQL para ejecutar."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">SELECT        Producto.IdProducto, Producto.DescriProducto, Producto.PrecioUnidad, Categoria.IdCategoria, Marca.IdMarca, Marca.NombreMarca, 
+                         Categoria.NombreCategoria
+FROM            Categoria INNER JOIN
+                         Producto ON Categoria.IdCategoria = Producto.IdCategoria INNER JOIN
+                         Marca ON Producto.IdMarca = Marca.IdMarca</property>
+                <property
+                  dataType="System.String"
+                  description="Variable que contiene el comando SQL para ejecutar."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica la página de códigos de columna para utilizar cuando la información de página de códigos no está disponible en el origen de datos."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Fuerza el uso del valor de la propiedad DefaultCodePage al describir datos de caracteres."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica el modo utilizado para obtener acceso a la base de datos."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="Asignaciones entre los parámetros del comando SQL y las variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Grabar DimProducto\Origen de OLE DB.Connections[OleDbConnection]"
+                  connectionManagerID="{D27F6602-7D8B-4404-A5E8-7397BA557C1F}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[LocalHost.ETL]"
+                  description="La conexión de tiempo de ejecución OLE DB usada para obtener acceso a la base de datos."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB]"
+                  name="Salida de origen de OLE DB">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdProducto]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[IdProducto]"
+                      length="6"
+                      lineageId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdProducto]"
+                      name="IdProducto"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[DescriProducto]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[DescriProducto]"
+                      length="50"
+                      lineageId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[DescriProducto]"
+                      name="DescriProducto"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[PrecioUnidad]"
+                      dataType="cy"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[PrecioUnidad]"
+                      lineageId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[PrecioUnidad]"
+                      name="PrecioUnidad"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdCategoria]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[IdCategoria]"
+                      length="6"
+                      lineageId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdCategoria]"
+                      name="IdCategoria"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdMarca]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[IdMarca]"
+                      length="6"
+                      lineageId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdMarca]"
+                      name="IdMarca"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreMarca]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[NombreMarca]"
+                      length="50"
+                      lineageId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreMarca]"
+                      name="NombreMarca"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreCategoria]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[NombreCategoria]"
+                      length="50"
+                      lineageId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreCategoria]"
+                      name="NombreCategoria"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[IdProducto]"
+                      dataType="wstr"
+                      length="6"
+                      name="IdProducto" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[DescriProducto]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="DescriProducto" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[PrecioUnidad]"
+                      dataType="cy"
+                      name="PrecioUnidad" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[IdCategoria]"
+                      dataType="wstr"
+                      length="6"
+                      name="IdCategoria" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[IdMarca]"
+                      dataType="wstr"
+                      length="6"
+                      name="IdMarca" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[NombreMarca]"
+                      dataType="wstr"
+                      length="50"
+                      name="NombreMarca" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[NombreCategoria]"
+                      dataType="wstr"
+                      length="50"
+                      name="NombreCategoria" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB]"
+                  isErrorOut="true"
+                  name="Salida de error de origen de OLE DB">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[IdProducto]"
+                      dataType="wstr"
+                      length="6"
+                      lineageId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[IdProducto]"
+                      name="IdProducto" />
+                    <outputColumn
+                      refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[DescriProducto]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[DescriProducto]"
+                      name="DescriProducto" />
+                    <outputColumn
+                      refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[PrecioUnidad]"
+                      dataType="cy"
+                      lineageId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[PrecioUnidad]"
+                      name="PrecioUnidad" />
+                    <outputColumn
+                      refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[IdCategoria]"
+                      dataType="wstr"
+                      length="6"
+                      lineageId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[IdCategoria]"
+                      name="IdCategoria" />
+                    <outputColumn
+                      refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[IdMarca]"
+                      dataType="wstr"
+                      length="6"
+                      lineageId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[IdMarca]"
+                      name="IdMarca" />
+                    <outputColumn
+                      refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[NombreMarca]"
+                      dataType="wstr"
+                      length="50"
+                      lineageId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[NombreMarca]"
+                      name="NombreMarca" />
+                    <outputColumn
+                      refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[NombreCategoria]"
+                      dataType="wstr"
+                      length="50"
+                      lineageId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[NombreCategoria]"
+                      name="NombreCategoria" />
+                    <outputColumn
+                      refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Grabar DimProducto.Paths[Salida de Copiar columna]"
+              endId="Package\Grabar DimProducto\Destino de OLE DB.Inputs[Entrada de destino de OLE DB]"
+              name="Salida de Copiar columna"
+              startId="Package\Grabar DimProducto\Copiar columna.Outputs[Salida de Copiar columna]" />
+            <path
+              refId="Package\Grabar DimProducto.Paths[Salida de origen de OLE DB]"
+              endId="Package\Grabar DimProducto\Copiar columna.Inputs[Entrada de Copiar columna]"
+              name="Salida de origen de OLE DB"
+              startId="Package\Grabar DimProducto\Origen de OLE DB.Outputs[Salida de origen de OLE DB]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Grabar DimTiempo"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Tarea Flujo de datos"
+      DTS:DTSID="{25F8BA2E-838E-4E8A-B8A3-CE50D9D8C756}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Grabar DimTiempo"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Grabar DimTiempo\Copiar columna"
+              componentClassID="Microsoft.CopyMap"
+              contactInfo="Copiar columna;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;0"
+              description="Copia columnas de entrada en nuevas columnas de la salida de transformación. Por ejemplo, se crea una copia de la columna 'dirección' de modo que se pueda limpiar en transformaciones subsiguientes y se mantiene la columna original para las auditorías."
+              name="Copiar columna">
+              <inputs>
+                <input
+                  refId="Package\Grabar DimTiempo\Copiar columna.Inputs[Entrada de Copiar columna]"
+                  name="Entrada de Copiar columna">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Grabar DimTiempo\Copiar columna.Outputs[Salida de Copiar columna]"
+                  name="Salida de Copiar columna"
+                  synchronousInputId="Package\Grabar DimTiempo\Copiar columna.Inputs[Entrada de Copiar columna]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Grabar DimTiempo\Destino de OLE DB"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="Destino de OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;4"
+              description="Destino de OLE DB"
+              name="Destino de OLE DB"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Número de segundos antes de que se agote el tiempo de espera de un comando. Un valor de 0 indica un tiempo de espera infinito."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowset">[dbo].[DimTiempo]</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica la variable que contiene el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="Comando SQL para ejecutar."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica la página de códigos de columna para utilizar cuando la información de página de códigos no está disponible en el origen de datos."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Fuerza el uso del valor de la propiedad DefaultCodePage al describir datos de caracteres."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica el modo utilizado para obtener acceso a la base de datos."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indica si los valores proporcionados para columnas de identidad se van a copiar al destino. Si es False, los valores de las columnas de identidad se generan automáticamente en el destino. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indica si las columnas que contienen NULL tendrán NULL insertado en el destino. Si es False, las columnas que contienen NULL tendrán sus valores predeterminados insertados en el destino. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica opciones para usar con la carga rápida. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica cuándo se emiten confirmaciones durante la inserción de datos. El valor 0 especifica que se emitirá una confirmación al final de la inserción de datos. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Grabar DimTiempo\Destino de OLE DB.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[LocalHost.ETL_Stage]"
+                  connectionManagerRefId="Package.ConnectionManagers[LocalHost.ETL_Stage]"
+                  description="La conexión de tiempo de ejecución OLE DB usada para obtener acceso a la base de datos."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB]"
+                  errorOrTruncationOperation="Insertar"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="Entrada de destino de OLE DB">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[Año]"
+                      cachedDataType="i4"
+                      cachedName="Año"
+                      externalMetadataColumnId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[Año]"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[Año]" />
+                    <inputColumn
+                      refId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[Trimestre]"
+                      cachedDataType="i4"
+                      cachedName="Trimestre"
+                      externalMetadataColumnId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[Trimestre]"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[Trimestre]" />
+                    <inputColumn
+                      refId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[NomMes]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="15"
+                      cachedName="NomMes"
+                      externalMetadataColumnId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[NomMes]"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NomMes]" />
+                    <inputColumn
+                      refId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[Dia]"
+                      cachedDataType="i4"
+                      cachedName="Dia"
+                      externalMetadataColumnId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[Dia]"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[Dia]" />
+                    <inputColumn
+                      refId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[NomDiaSemana]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="15"
+                      cachedName="NomDiaSemana"
+                      externalMetadataColumnId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[NomDiaSem]"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NomDiaSemana]" />
+                    <inputColumn
+                      refId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[Mes]"
+                      cachedDataType="i4"
+                      cachedName="Mes"
+                      externalMetadataColumnId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[Mes]"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[Mes]" />
+                    <inputColumn
+                      refId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[DiaSemana]"
+                      cachedDataType="i4"
+                      cachedName="DiaSemana"
+                      externalMetadataColumnId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[DiaSem]"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[DiaSemana]" />
+                    <inputColumn
+                      refId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[FechaPedido]"
+                      cachedDataType="dbDate"
+                      cachedName="FechaPedido"
+                      externalMetadataColumnId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[Fecha]"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[FechaPedido]" />
+                    <inputColumn
+                      refId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[CodigoFecha]"
+                      cachedDataType="i4"
+                      cachedName="CodigoFecha"
+                      externalMetadataColumnId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[FechaId]"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[CodigoFecha]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[FechaId]"
+                      dataType="i4"
+                      name="FechaId" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[Fecha]"
+                      dataType="dbTimeStamp"
+                      name="Fecha" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[Año]"
+                      dataType="i2"
+                      name="Año" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[Trimestre]"
+                      dataType="ui1"
+                      name="Trimestre" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[Mes]"
+                      dataType="ui1"
+                      name="Mes" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[NomMes]"
+                      codePage="1252"
+                      dataType="str"
+                      length="15"
+                      name="NomMes" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[Dia]"
+                      dataType="ui1"
+                      name="Dia" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[DiaSem]"
+                      dataType="ui1"
+                      name="DiaSem" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[NomDiaSem]"
+                      codePage="1252"
+                      dataType="str"
+                      length="15"
+                      name="NomDiaSem" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Grabar DimTiempo\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Salida de error de destino de OLE DB"
+                  synchronousInputId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Grabar DimTiempo\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Grabar DimTiempo\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Grabar DimTiempo\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Grabar DimTiempo\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Grabar DimTiempo\Origen de OLE DB"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="Origen de OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;7"
+              description="Origen de OLE DB"
+              name="Origen de OLE DB"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Número de segundos antes de que se agote el tiempo de espera de un comando. Un valor de 0 indica un tiempo de espera infinito."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Especifica la variable que contiene el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="Comando SQL para ejecutar."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">SELECT DISTINCT 
+                         YEAR(FechaPedido) * 10000 + MONTH(FechaPedido) * 100 + DAY(FechaPedido) AS CodigoFecha, FechaPedido, YEAR(FechaPedido) AS Año, DATEPART(QUARTER, 
+                         FechaPedido) AS Trimestre, MONTH(FechaPedido) AS Mes, dbo.fn_mes(MONTH(FechaPedido)) AS NomMes, DAY(FechaPedido) AS Dia, DATEPART(WEEKDAY, 
+                         FechaPedido) AS DiaSemana, dbo.fn_diaSem(DATEPART(WEEKDAY, FechaPedido)) AS NomDiaSemana
+FROM            Orden</property>
+                <property
+                  dataType="System.String"
+                  description="Variable que contiene el comando SQL para ejecutar."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica la página de códigos de columna para utilizar cuando la información de página de códigos no está disponible en el origen de datos."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Fuerza el uso del valor de la propiedad DefaultCodePage al describir datos de caracteres."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica el modo utilizado para obtener acceso a la base de datos."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="Asignaciones entre los parámetros del comando SQL y las variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Grabar DimTiempo\Origen de OLE DB.Connections[OleDbConnection]"
+                  connectionManagerID="{D27F6602-7D8B-4404-A5E8-7397BA557C1F}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[LocalHost.ETL]"
+                  description="La conexión de tiempo de ejecución OLE DB usada para obtener acceso a la base de datos."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB]"
+                  name="Salida de origen de OLE DB">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[CodigoFecha]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[CodigoFecha]"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[CodigoFecha]"
+                      name="CodigoFecha"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[FechaPedido]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[FechaPedido]"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[FechaPedido]"
+                      name="FechaPedido"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[Año]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[Año]"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[Año]"
+                      name="Año"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[Trimestre]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[Trimestre]"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[Trimestre]"
+                      name="Trimestre"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[Mes]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[Mes]"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[Mes]"
+                      name="Mes"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NomMes]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[NomMes]"
+                      length="15"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NomMes]"
+                      name="NomMes"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[Dia]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[Dia]"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[Dia]"
+                      name="Dia"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[DiaSemana]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[DiaSemana]"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[DiaSemana]"
+                      name="DiaSemana"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NomDiaSemana]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[NomDiaSemana]"
+                      length="15"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NomDiaSemana]"
+                      name="NomDiaSemana"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[CodigoFecha]"
+                      dataType="i4"
+                      name="CodigoFecha" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[FechaPedido]"
+                      dataType="dbDate"
+                      name="FechaPedido" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[Año]"
+                      dataType="i4"
+                      name="Año" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[Trimestre]"
+                      dataType="i4"
+                      name="Trimestre" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[Mes]"
+                      dataType="i4"
+                      name="Mes" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[NomMes]"
+                      codePage="1252"
+                      dataType="str"
+                      length="15"
+                      name="NomMes" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[Dia]"
+                      dataType="i4"
+                      name="Dia" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[DiaSemana]"
+                      dataType="i4"
+                      name="DiaSemana" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[NomDiaSemana]"
+                      codePage="1252"
+                      dataType="str"
+                      length="15"
+                      name="NomDiaSemana" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB]"
+                  isErrorOut="true"
+                  name="Salida de error de origen de OLE DB">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[CodigoFecha]"
+                      dataType="i4"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[CodigoFecha]"
+                      name="CodigoFecha" />
+                    <outputColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[FechaPedido]"
+                      dataType="dbDate"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[FechaPedido]"
+                      name="FechaPedido" />
+                    <outputColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[Año]"
+                      dataType="i4"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[Año]"
+                      name="Año" />
+                    <outputColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[Trimestre]"
+                      dataType="i4"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[Trimestre]"
+                      name="Trimestre" />
+                    <outputColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[Mes]"
+                      dataType="i4"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[Mes]"
+                      name="Mes" />
+                    <outputColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[NomMes]"
+                      codePage="1252"
+                      dataType="str"
+                      length="15"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[NomMes]"
+                      name="NomMes" />
+                    <outputColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[Dia]"
+                      dataType="i4"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[Dia]"
+                      name="Dia" />
+                    <outputColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[DiaSemana]"
+                      dataType="i4"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[DiaSemana]"
+                      name="DiaSemana" />
+                    <outputColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[NomDiaSemana]"
+                      codePage="1252"
+                      dataType="str"
+                      length="15"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[NomDiaSemana]"
+                      name="NomDiaSemana" />
+                    <outputColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Grabar DimTiempo.Paths[Salida de Copiar columna]"
+              endId="Package\Grabar DimTiempo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB]"
+              name="Salida de Copiar columna"
+              startId="Package\Grabar DimTiempo\Copiar columna.Outputs[Salida de Copiar columna]" />
+            <path
+              refId="Package\Grabar DimTiempo.Paths[Salida de origen de OLE DB]"
+              endId="Package\Grabar DimTiempo\Copiar columna.Inputs[Entrada de Copiar columna]"
+              name="Salida de origen de OLE DB"
+              startId="Package\Grabar DimTiempo\Origen de OLE DB.Outputs[Salida de origen de OLE DB]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Grabar UbiGeo"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Tarea Flujo de datos"
+      DTS:DTSID="{9463DC29-B3CC-4DF8-AD36-742A7F1864A6}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Grabar UbiGeo"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Grabar UbiGeo\Copiar columna"
+              componentClassID="Microsoft.CopyMap"
+              contactInfo="Copiar columna;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;0"
+              description="Copia columnas de entrada en nuevas columnas de la salida de transformación. Por ejemplo, se crea una copia de la columna 'dirección' de modo que se pueda limpiar en transformaciones subsiguientes y se mantiene la columna original para las auditorías."
+              name="Copiar columna">
+              <inputs>
+                <input
+                  refId="Package\Grabar UbiGeo\Copiar columna.Inputs[Entrada de Copiar columna]"
+                  name="Entrada de Copiar columna">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Grabar UbiGeo\Copiar columna.Outputs[Salida de Copiar columna]"
+                  name="Salida de Copiar columna"
+                  synchronousInputId="Package\Grabar UbiGeo\Copiar columna.Inputs[Entrada de Copiar columna]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Grabar UbiGeo\Destino de OLE DB"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="Destino de OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;4"
+              description="Destino de OLE DB"
+              name="Destino de OLE DB"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Número de segundos antes de que se agote el tiempo de espera de un comando. Un valor de 0 indica un tiempo de espera infinito."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowset">[dbo].[DimUbigeo]</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica la variable que contiene el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="Comando SQL para ejecutar."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica la página de códigos de columna para utilizar cuando la información de página de códigos no está disponible en el origen de datos."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Fuerza el uso del valor de la propiedad DefaultCodePage al describir datos de caracteres."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica el modo utilizado para obtener acceso a la base de datos."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indica si los valores proporcionados para columnas de identidad se van a copiar al destino. Si es False, los valores de las columnas de identidad se generan automáticamente en el destino. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indica si las columnas que contienen NULL tendrán NULL insertado en el destino. Si es False, las columnas que contienen NULL tendrán sus valores predeterminados insertados en el destino. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica opciones para usar con la carga rápida. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica cuándo se emiten confirmaciones durante la inserción de datos. El valor 0 especifica que se emitirá una confirmación al final de la inserción de datos. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Grabar UbiGeo\Destino de OLE DB.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[LocalHost.ETL_Stage]"
+                  connectionManagerRefId="Package.ConnectionManagers[LocalHost.ETL_Stage]"
+                  description="La conexión de tiempo de ejecución OLE DB usada para obtener acceso a la base de datos."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Grabar UbiGeo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB]"
+                  errorOrTruncationOperation="Insertar"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="Entrada de destino de OLE DB">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Grabar UbiGeo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[IdProvincia]"
+                      cachedDataType="wstr"
+                      cachedLength="6"
+                      cachedName="IdProvincia"
+                      externalMetadataColumnId="Package\Grabar UbiGeo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[IdProvincia]"
+                      lineageId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdProvincia]" />
+                    <inputColumn
+                      refId="Package\Grabar UbiGeo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[NombreProvincia]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="NombreProvincia"
+                      externalMetadataColumnId="Package\Grabar UbiGeo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[NombreProvincia]"
+                      lineageId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreProvincia]" />
+                    <inputColumn
+                      refId="Package\Grabar UbiGeo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[IdDepartamento]"
+                      cachedDataType="wstr"
+                      cachedLength="6"
+                      cachedName="IdDepartamento"
+                      externalMetadataColumnId="Package\Grabar UbiGeo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[IdDepartamento]"
+                      lineageId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdDepartamento]" />
+                    <inputColumn
+                      refId="Package\Grabar UbiGeo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[NombreDepartamento]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="NombreDepartamento"
+                      externalMetadataColumnId="Package\Grabar UbiGeo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[NombreDepartamento]"
+                      lineageId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreDepartamento]" />
+                    <inputColumn
+                      refId="Package\Grabar UbiGeo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[IdDistrito]"
+                      cachedDataType="wstr"
+                      cachedLength="7"
+                      cachedName="IdDistrito"
+                      externalMetadataColumnId="Package\Grabar UbiGeo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[IdDistrito]"
+                      lineageId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdDistrito]" />
+                    <inputColumn
+                      refId="Package\Grabar UbiGeo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[NombreDistrito]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="NombreDistrito"
+                      externalMetadataColumnId="Package\Grabar UbiGeo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[NombreDistrito]"
+                      lineageId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreDistrito]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Grabar UbiGeo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[Ubigeo_SKey]"
+                      dataType="i4"
+                      name="Ubigeo_SKey" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar UbiGeo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[IdDepartamento]"
+                      dataType="wstr"
+                      length="10"
+                      name="IdDepartamento" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar UbiGeo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[NombreDepartamento]"
+                      dataType="wstr"
+                      length="50"
+                      name="NombreDepartamento" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar UbiGeo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[IdProvincia]"
+                      dataType="wstr"
+                      length="10"
+                      name="IdProvincia" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar UbiGeo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[NombreProvincia]"
+                      dataType="wstr"
+                      length="50"
+                      name="NombreProvincia" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar UbiGeo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[IdDistrito]"
+                      dataType="wstr"
+                      length="10"
+                      name="IdDistrito" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar UbiGeo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[NombreDistrito]"
+                      dataType="wstr"
+                      length="50"
+                      name="NombreDistrito" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Grabar UbiGeo\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Salida de error de destino de OLE DB"
+                  synchronousInputId="Package\Grabar UbiGeo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Grabar UbiGeo\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Grabar UbiGeo\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Grabar UbiGeo\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Grabar UbiGeo\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Grabar UbiGeo\Origen de OLE DB"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="Origen de OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;7"
+              description="Origen de OLE DB"
+              name="Origen de OLE DB"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Número de segundos antes de que se agote el tiempo de espera de un comando. Un valor de 0 indica un tiempo de espera infinito."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Especifica la variable que contiene el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="Comando SQL para ejecutar."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">SELECT        Provincia.IdProvincia, Provincia.NombreProvincia, Departamento.IdDepartamento, Departamento.NombreDepartamento, Distrito.IdDistrito, 
+                         Distrito.NombreDistrito
+FROM            Departamento INNER JOIN
+                         Provincia ON Departamento.IdDepartamento = Provincia.IdDepartamento INNER JOIN
+                         Distrito ON Provincia.IdProvincia = Distrito.IdProvincia</property>
+                <property
+                  dataType="System.String"
+                  description="Variable que contiene el comando SQL para ejecutar."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica la página de códigos de columna para utilizar cuando la información de página de códigos no está disponible en el origen de datos."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Fuerza el uso del valor de la propiedad DefaultCodePage al describir datos de caracteres."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica el modo utilizado para obtener acceso a la base de datos."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="Asignaciones entre los parámetros del comando SQL y las variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Grabar UbiGeo\Origen de OLE DB.Connections[OleDbConnection]"
+                  connectionManagerID="{D27F6602-7D8B-4404-A5E8-7397BA557C1F}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[LocalHost.ETL]"
+                  description="La conexión de tiempo de ejecución OLE DB usada para obtener acceso a la base de datos."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB]"
+                  name="Salida de origen de OLE DB">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdProvincia]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[IdProvincia]"
+                      length="6"
+                      lineageId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdProvincia]"
+                      name="IdProvincia"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreProvincia]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[NombreProvincia]"
+                      length="50"
+                      lineageId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreProvincia]"
+                      name="NombreProvincia"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdDepartamento]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[IdDepartamento]"
+                      length="6"
+                      lineageId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdDepartamento]"
+                      name="IdDepartamento"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreDepartamento]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[NombreDepartamento]"
+                      length="50"
+                      lineageId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreDepartamento]"
+                      name="NombreDepartamento"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdDistrito]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[IdDistrito]"
+                      length="7"
+                      lineageId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[IdDistrito]"
+                      name="IdDistrito"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreDistrito]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[NombreDistrito]"
+                      length="50"
+                      lineageId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[NombreDistrito]"
+                      name="NombreDistrito"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[IdProvincia]"
+                      dataType="wstr"
+                      length="6"
+                      name="IdProvincia" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[NombreProvincia]"
+                      dataType="wstr"
+                      length="50"
+                      name="NombreProvincia" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[IdDepartamento]"
+                      dataType="wstr"
+                      length="6"
+                      name="IdDepartamento" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[NombreDepartamento]"
+                      dataType="wstr"
+                      length="50"
+                      name="NombreDepartamento" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[IdDistrito]"
+                      dataType="wstr"
+                      length="7"
+                      name="IdDistrito" />
+                    <externalMetadataColumn
+                      refId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[NombreDistrito]"
+                      dataType="wstr"
+                      length="50"
+                      name="NombreDistrito" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB]"
+                  isErrorOut="true"
+                  name="Salida de error de origen de OLE DB">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[IdProvincia]"
+                      dataType="wstr"
+                      length="6"
+                      lineageId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[IdProvincia]"
+                      name="IdProvincia" />
+                    <outputColumn
+                      refId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[NombreProvincia]"
+                      dataType="wstr"
+                      length="50"
+                      lineageId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[NombreProvincia]"
+                      name="NombreProvincia" />
+                    <outputColumn
+                      refId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[IdDepartamento]"
+                      dataType="wstr"
+                      length="6"
+                      lineageId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[IdDepartamento]"
+                      name="IdDepartamento" />
+                    <outputColumn
+                      refId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[NombreDepartamento]"
+                      dataType="wstr"
+                      length="50"
+                      lineageId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[NombreDepartamento]"
+                      name="NombreDepartamento" />
+                    <outputColumn
+                      refId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[IdDistrito]"
+                      dataType="wstr"
+                      length="7"
+                      lineageId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[IdDistrito]"
+                      name="IdDistrito" />
+                    <outputColumn
+                      refId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[NombreDistrito]"
+                      dataType="wstr"
+                      length="50"
+                      lineageId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[NombreDistrito]"
+                      name="NombreDistrito" />
+                    <outputColumn
+                      refId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Grabar UbiGeo.Paths[Salida de Copiar columna]"
+              endId="Package\Grabar UbiGeo\Destino de OLE DB.Inputs[Entrada de destino de OLE DB]"
+              name="Salida de Copiar columna"
+              startId="Package\Grabar UbiGeo\Copiar columna.Outputs[Salida de Copiar columna]" />
+            <path
+              refId="Package\Grabar UbiGeo.Paths[Salida de origen de OLE DB]"
+              endId="Package\Grabar UbiGeo\Copiar columna.Inputs[Entrada de Copiar columna]"
+              name="Salida de origen de OLE DB"
+              startId="Package\Grabar UbiGeo\Origen de OLE DB.Outputs[Salida de origen de OLE DB]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Limpiar Tablas"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Tarea Ejecutar SQL"
+      DTS:DTSID="{30BD1D93-E1AF-4C4E-8727-462B28232596}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Limpiar Tablas"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{498A4C94-0FB2-4002-870F-F593BBF6BBD6}"
+          SQLTask:SqlStatementSource="delete DimCliente;&#xA;delete DimEmpleado;&#xA;delete DimProducto;&#xA;delete DimUbiGeo;&#xA;delete DimTiempo;&#xA;truncate table FactVentaOrden;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Restricción]"
+      DTS:CreationName=""
+      DTS:DTSID="{22CB7233-F4FF-49ED-BDA7-7EB80DCFABFA}"
+      DTS:From="Package\Limpiar Tablas"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Restricción"
+      DTS:To="Package\Grabar DimCliente" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Restricción 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{20A0D0B6-F8E5-4F39-98F9-B4890B32C170}"
+      DTS:From="Package\Limpiar Tablas"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Restricción 1"
+      DTS:To="Package\Grabar DimEmpleado" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Restricción 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{6DC3A894-9EB2-4578-924C-AC8B1E3E2F97}"
+      DTS:From="Package\Limpiar Tablas"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Restricción 2"
+      DTS:To="Package\Grabar DimProducto" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Restricción 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{CB517ECC-3F82-4CA7-91D3-6138549CE0A2}"
+      DTS:From="Package\Limpiar Tablas"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Restricción 3"
+      DTS:To="Package\Grabar UbiGeo" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Restricción 4]"
+      DTS:CreationName=""
+      DTS:DTSID="{E2DC3937-2BAF-4A18-82E1-3345C4A8E0D0}"
+      DTS:From="Package\Limpiar Tablas"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Restricción 4"
+      DTS:To="Package\Grabar DimTiempo" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Restricción 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{C28B7E83-0F5D-4196-9B41-9B7CCDEF73BD}"
+      DTS:From="Package\Grabar DimCliente"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Restricción 5"
+      DTS:To="Package\Cargar Datos" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Restricción 6]"
+      DTS:CreationName=""
+      DTS:DTSID="{0E1D69D7-F55D-4EF5-B3D8-F4DD20681197}"
+      DTS:From="Package\Grabar DimEmpleado"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Restricción 6"
+      DTS:To="Package\Cargar Datos" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Restricción 7]"
+      DTS:CreationName=""
+      DTS:DTSID="{B8CE1699-4125-44C4-9615-30C790439A19}"
+      DTS:From="Package\Grabar DimProducto"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Restricción 7"
+      DTS:To="Package\Cargar Datos" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Restricción 8]"
+      DTS:CreationName=""
+      DTS:DTSID="{19E58881-1DB1-4F43-AC1D-CFD457AECAAD}"
+      DTS:From="Package\Grabar DimTiempo"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Restricción 8"
+      DTS:To="Package\Cargar Datos" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Restricción 9]"
+      DTS:CreationName=""
+      DTS:DTSID="{1E2F94EF-E0B3-4ADA-B003-2DB4E14A411D}"
+      DTS:From="Package\Grabar UbiGeo"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Restricción 9"
+      DTS:To="Package\Cargar Datos" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--Esta sección CDATA contiene la información de diseño del paquete. Esta sección incluye información como, por ejemplo, las coordenadas (x,y), el ancho y el alto.-->
+<!--Si edita manualmente esta sección y comete un error, puede eliminarlo. -->
+<!--El paquete podrá cargarse normalmente, pero se perderá la información de diseño anterior y el diseñador reorganizará los elementos automáticamente en la superficie de diseño.-->
+<Objects
+  Version="8">
+  <!--Cada uno de los nodos siguientes contiene propiedades que no afectan al comportamiento en tiempo de ejecución.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="149,42"
+          Id="Package\Limpiar Tablas"
+          TopLeft="298,31" />
+        <NodeLayout
+          Size="167,42"
+          Id="Package\Grabar DimCliente"
+          TopLeft="7,146" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Restricción]"
+          TopLeft="325.5,73">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-235,73"
+              Start="0,0"
+              End="-235,65.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,15.6813725490196" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,15.6813725490196"
+                    Point2="0,19.6813725490196"
+                    Point3="-4,19.6813725490196" />
+                  <mssgle:LineSegment
+                    End="-231,19.6813725490196" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-231,19.6813725490196"
+                    Point2="-235,19.6813725490196"
+                    Point3="-235,23.6813725490196" />
+                  <mssgle:LineSegment
+                    End="-235,65.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="181,42"
+          Id="Package\Grabar DimEmpleado"
+          TopLeft="136,189" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Restricción 1]"
+          TopLeft="349,73">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-122.5,116"
+              Start="0,0"
+              End="-122.5,108.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,43.1394422310757" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,43.1394422310757"
+                    Point2="0,47.1394422310757"
+                    Point3="-4,47.1394422310757" />
+                  <mssgle:LineSegment
+                    End="-118.5,47.1394422310757" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-118.5,47.1394422310757"
+                    Point2="-122.5,47.1394422310757"
+                    Point3="-122.5,51.1394422310757" />
+                  <mssgle:LineSegment
+                    End="-122.5,108.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="177,42"
+          Id="Package\Grabar DimProducto"
+          TopLeft="288,132" />
+        <NodeLayout
+          Size="170,42"
+          Id="Package\Grabar DimTiempo"
+          TopLeft="411,192" />
+        <NodeLayout
+          Size="150,42"
+          Id="Package\Grabar UbiGeo"
+          TopLeft="551,146" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Restricción 2]"
+          TopLeft="374.5,73">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59"
+              Start="0,0"
+              End="0,51.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Restricción 3]"
+          TopLeft="419.5,73">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="206.5,73"
+              Start="0,0"
+              End="206.5,65.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,15.6813725490196" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,15.6813725490196"
+                    Point2="0,19.6813725490196"
+                    Point3="4,19.6813725490196" />
+                  <mssgle:LineSegment
+                    End="202.5,19.6813725490196" />
+                  <mssgle:CubicBezierSegment
+                    Point1="202.5,19.6813725490196"
+                    Point2="206.5,19.6813725490196"
+                    Point3="206.5,23.6813725490196" />
+                  <mssgle:LineSegment
+                    End="206.5,65.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Restricción 4]"
+          TopLeft="396,73">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="100,119"
+              Start="0,0"
+              End="100,111.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,44.3585657370518" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,44.3585657370518"
+                    Point2="0,48.3585657370518"
+                    Point3="4,48.3585657370518" />
+                  <mssgle:LineSegment
+                    End="96,48.3585657370518" />
+                  <mssgle:CubicBezierSegment
+                    Point1="96,48.3585657370518"
+                    Point2="100,48.3585657370518"
+                    Point3="100,52.3585657370518" />
+                  <mssgle:LineSegment
+                    End="100,111.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="142,42"
+          Id="Package\Cargar Datos"
+          TopLeft="287,346" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Restricción 5]"
+          TopLeft="90.5,188">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="222.833333333333,158"
+              Start="0,0"
+              End="222.833333333333,150.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,111.253424657534" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,111.253424657534"
+                    Point2="0,115.253424657534"
+                    Point3="4,115.253424657534" />
+                  <mssgle:LineSegment
+                    End="218.833333333333,115.253424657534" />
+                  <mssgle:CubicBezierSegment
+                    Point1="218.833333333333,115.253424657534"
+                    Point2="222.833333333333,115.253424657534"
+                    Point3="222.833333333333,119.253424657534" />
+                  <mssgle:LineSegment
+                    End="222.833333333333,150.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Restricción 6]"
+          TopLeft="226.5,231">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="109.166666666667,115"
+              Start="0,0"
+              End="109.166666666667,107.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,64.2311977715877" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,64.2311977715877"
+                    Point2="0,68.2311977715877"
+                    Point3="4,68.2311977715877" />
+                  <mssgle:LineSegment
+                    End="105.166666666667,68.2311977715877" />
+                  <mssgle:CubicBezierSegment
+                    Point1="105.166666666667,68.2311977715877"
+                    Point2="109.166666666667,68.2311977715877"
+                    Point3="109.166666666667,72.2311977715877" />
+                  <mssgle:LineSegment
+                    End="109.166666666667,107.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Restricción 7]"
+          TopLeft="376.5,174">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-18.5,172"
+              Start="0,0"
+              End="-18.5,164.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,82" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,82"
+                    Point2="0,86"
+                    Point3="-4,86" />
+                  <mssgle:LineSegment
+                    End="-14.5,86" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-14.5,86"
+                    Point2="-18.5,86"
+                    Point3="-18.5,90" />
+                  <mssgle:LineSegment
+                    End="-18.5,164.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Restricción 8]"
+          TopLeft="496,234">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-115.666666666667,112"
+              Start="0,0"
+              End="-115.666666666667,104.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,62.4512534818941" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,62.4512534818941"
+                    Point2="0,66.4512534818941"
+                    Point3="-4,66.4512534818941" />
+                  <mssgle:LineSegment
+                    End="-111.666666666667,66.4512534818941" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-111.666666666667,66.4512534818941"
+                    Point2="-115.666666666667,66.4512534818941"
+                    Point3="-115.666666666667,70.4512534818941" />
+                  <mssgle:LineSegment
+                    End="-115.666666666667,104.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Restricción 9]"
+          TopLeft="626,188">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-223.333333333333,158"
+              Start="0,0"
+              End="-223.333333333333,150.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,111.253424657534" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,111.253424657534"
+                    Point2="0,115.253424657534"
+                    Point3="-4,115.253424657534" />
+                  <mssgle:LineSegment
+                    End="-219.333333333333,115.253424657534" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-219.333333333333,115.253424657534"
+                    Point2="-223.333333333333,115.253424657534"
+                    Point3="-223.333333333333,119.253424657534" />
+                  <mssgle:LineSegment
+                    End="-223.333333333333,150.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Grabar DimCliente">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="170,42"
+          Id="Package\Grabar DimCliente\Destino de OLE DB"
+          TopLeft="147,279" />
+        <NodeLayout
+          Size="166,42"
+          Id="Package\Grabar DimCliente\Origen de OLE DB"
+          TopLeft="140,67" />
+        <NodeLayout
+          Size="154,42"
+          Id="Package\Grabar DimCliente\Copiar columna"
+          TopLeft="143,179" />
+        <EdgeLayout
+          Id="Package\Grabar DimCliente.Paths[Salida de origen de OLE DB]"
+          TopLeft="221.5,109">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,70"
+              Start="0,0"
+              End="0,62.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,62.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Grabar DimCliente.Paths[Salida de Copiar columna]"
+          TopLeft="220,221">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="12,58"
+              Start="0,0"
+              End="12,50.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,25" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,25"
+                    Point2="0,29"
+                    Point3="4,29" />
+                  <mssgle:LineSegment
+                    End="8,29" />
+                  <mssgle:CubicBezierSegment
+                    Point1="8,29"
+                    Point2="12,29"
+                    Point3="12,33" />
+                  <mssgle:LineSegment
+                    End="12,50.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Grabar DimCliente\Destino de OLE DB">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Grabar DimCliente\Origen de OLE DB">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\Grabar DimEmpleado">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="154,42"
+          Id="Package\Grabar DimEmpleado\Copiar columna"
+          TopLeft="255,173" />
+        <NodeLayout
+          Size="166,42"
+          Id="Package\Grabar DimEmpleado\Origen de OLE DB"
+          TopLeft="250,66" />
+        <NodeLayout
+          Size="170,42"
+          Id="Package\Grabar DimEmpleado\Destino de OLE DB"
+          TopLeft="252,279" />
+        <EdgeLayout
+          Id="Package\Grabar DimEmpleado.Paths[Salida de origen de OLE DB]"
+          TopLeft="332.5,108">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,65"
+              Start="0,0"
+              End="0,57.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,57.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Grabar DimEmpleado.Paths[Salida de Copiar columna]"
+          TopLeft="334.5,215">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,64"
+              Start="0,0"
+              End="0,56.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,56.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Grabar DimEmpleado\Origen de OLE DB">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Grabar DimEmpleado\Destino de OLE DB">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\Grabar DimProducto">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="166,42"
+          Id="Package\Grabar DimProducto\Origen de OLE DB"
+          TopLeft="279,62" />
+        <NodeLayout
+          Size="170,42"
+          Id="Package\Grabar DimProducto\Destino de OLE DB"
+          TopLeft="280,275" />
+        <NodeLayout
+          Size="154,42"
+          Id="Package\Grabar DimProducto\Copiar columna"
+          TopLeft="289,163" />
+        <EdgeLayout
+          Id="Package\Grabar DimProducto.Paths[Salida de origen de OLE DB]"
+          TopLeft="364,104">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59"
+              Start="0,0"
+              End="0,51.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Grabar DimProducto.Paths[Salida de Copiar columna]"
+          TopLeft="365.5,205">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,70"
+              Start="0,0"
+              End="0,62.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,62.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <TaskHost
+    design-time-name="Package\Grabar DimTiempo">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="154,42"
+          Id="Package\Grabar DimTiempo\Copiar columna"
+          TopLeft="245,157" />
+        <NodeLayout
+          Size="166,42"
+          Id="Package\Grabar DimTiempo\Origen de OLE DB"
+          TopLeft="233,69" />
+        <NodeLayout
+          Size="170,42"
+          Id="Package\Grabar DimTiempo\Destino de OLE DB"
+          TopLeft="243,254" />
+        <EdgeLayout
+          Id="Package\Grabar DimTiempo.Paths[Salida de origen de OLE DB]"
+          TopLeft="319,111">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,46"
+              Start="0,0"
+              End="0,38.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,38.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Grabar DimTiempo.Paths[Salida de Copiar columna]"
+          TopLeft="325,199">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,55"
+              Start="0,0"
+              End="0,47.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,47.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <TaskHost
+    design-time-name="Package\Grabar UbiGeo">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="166,42"
+          Id="Package\Grabar UbiGeo\Origen de OLE DB"
+          TopLeft="252,130" />
+        <NodeLayout
+          Size="170,42"
+          Id="Package\Grabar UbiGeo\Destino de OLE DB"
+          TopLeft="257,321" />
+        <NodeLayout
+          Size="154,42"
+          Id="Package\Grabar UbiGeo\Copiar columna"
+          TopLeft="261,230" />
+        <EdgeLayout
+          Id="Package\Grabar UbiGeo.Paths[Salida de origen de OLE DB]"
+          TopLeft="336.5,172">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58"
+              Start="0,0"
+              End="0,50.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,50.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Grabar UbiGeo.Paths[Salida de Copiar columna]"
+          TopLeft="340,272">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,49"
+              Start="0,0"
+              End="0,41.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,41.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Grabar DimProducto\Origen de OLE DB">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Grabar DimProducto\Destino de OLE DB">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Grabar UbiGeo\Origen de OLE DB">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Grabar UbiGeo\Destino de OLE DB">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Grabar DimTiempo\Origen de OLE DB">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Grabar DimTiempo\Destino de OLE DB">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
